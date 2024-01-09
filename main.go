@@ -3,6 +3,7 @@ package main
 import (
 	"start-go/controllers"
 	"start-go/initializers"
+	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -16,15 +17,13 @@ func init() {
 func main() {
 	router := gin.Default()
 
-	corsConfig := cors.DefaultConfig()
-
-	corsConfig.AllowOrigins = []string{"http://localhost:3000"}
-
-	corsConfig.AllowCredentials = true
-
-	corsConfig.AddAllowMethods("OPTIONS")
-
-	router.Use(cors.New(corsConfig))
+	router.Use(cors.New(
+		cors.Config{
+			AllowOrigins:     []string{"http://localhost:3000"},
+			AllowMethods:     []string{"GET", "POST"},
+			AllowCredentials: true,
+			MaxAge:           12 * time.Hour,
+		}))
 
 	router.GET("/shoes", controllers.ShoesIndex)
 	router.GET("/shoes/:id", controllers.ShoesById)
